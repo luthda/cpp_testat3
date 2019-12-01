@@ -14,10 +14,14 @@ class indexableSet : std::set<T, COMPARE> {
 	using const_reference = typename container::const_reference;
 
 public:
-	const_reference at(size_type index) const {
-		if (index < this->size()) {
+	const_reference at(int index) const {
+		int actualSize = this->size();
+		if (index < 0) {
+			index += actualSize;
+		}
+		if (index < actualSize) {
 			auto it{this->begin()};
-			advance(it, index);
+			std::advance(it, index);
 			return *it;
 		}
 		else {
@@ -26,15 +30,15 @@ public:
 
 	}
 
-	const_reference operator[](size_type index) const {
+	const_reference operator[](int index) const {
 		return this->at(index);
 	}
 
-	reference front(size_type index) {
+	reference front(int index) {
 		return this[0];
 	}
 
-	reference back(size_type index) {
+	reference back(int index) {
 		return this[this->size() - 1];
 	}
 
