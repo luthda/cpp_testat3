@@ -12,9 +12,9 @@ class indexableSet : public std::set<T, COMPARE> {
 	using const_reference = typename container::const_reference;
 
 	const_reference move(int index) const {
+		if (index < 0) index += this->size();
 		auto it{this->begin()};
-		auto pointer = std::next(it, index);
-		return *pointer;
+		return *std::next(it, index);
 	}
 
 	void emptyCheck() const {
@@ -27,7 +27,6 @@ public:
 	const_reference at(int index) const {
 		int signedSize = this->size();
 		if (index < signedSize && index >= -signedSize) {
-			if (index < 0) index += signedSize;
 			return move(index);
 		}
 		else {
