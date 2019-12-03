@@ -48,8 +48,4 @@ public:
 		return this->at(0);
 	}
 };
-
-
-
-
 #endif /* SRC_INDEXABLESET_H_ */
