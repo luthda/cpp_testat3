@@ -8,7 +8,7 @@
 #include <string>
 #include <iterator>
 
-struct greater {
+struct caseless {
 	bool operator()(std::string const &lhs, std::string const &rhs) const {
 		return std::lexicographical_compare(std::begin(lhs), std::end(lhs), std::begin(rhs), std::end(rhs), [] (char leftChar, char rightChar) {
 			return tolower(leftChar) > tolower(rightChar);
@@ -91,7 +91,7 @@ void testLessComperator() {
 }
 
 void testGreaterForStringFunctor() {
-	indexableSet<std::string, greater> strSet{"HI", "lol", "xD", "alf", "cpp", "no more testats!!"};
+	indexableSet<std::string, caseless> strSet{"HI", "lol", "xD", "alf", "cpp", "no more testats!!"};
 	ASSERT_EQUAL("xD", strSet.front());
 	ASSERT_EQUAL("alf", strSet.back());
 }
