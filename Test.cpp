@@ -3,6 +3,8 @@
 #include "ide_listener.h"
 #include "xml_listener.h"
 #include "cute_runner.h"
+
+#include <stdexcept>
 #include <string>
 #include <iterator>
 
@@ -35,6 +37,7 @@ void testNegativeAtAccess() {
 void testNegativeIndexAccess2() {
 	indexableSet<int> indexSet{1, 3, 5};
 	ASSERT_EQUAL(1, indexSet.at(-3));
+	ASSERT_EQUAL(1, indexSet[-3]);
 }
 
 void testOutOfBoundException() {
