@@ -3,6 +3,16 @@
 #include "ide_listener.h"
 #include "xml_listener.h"
 #include "cute_runner.h"
+#include <string>
+#include <iterator>
+
+struct greater {
+	bool operator()(std::string const &lhs, std::string const &rhs) const {
+		return std::lexicographical_compare(std::begin(lhs), std::end(lhs), std::begin(rhs), std::end(rhs), [] (char leftChar, char rightChar) {
+			return tolower(leftChar) > tolower(rightChar);
+		});
+	}
+};
 
 void testIndexAccess() {
 	indexableSet<int, std::less<int>> indexSet{1, 2, 3};
@@ -77,13 +87,14 @@ void testLessComperator() {
 	ASSERT_EQUAL(99, intSet.back());
 }
 
-void thisIsATest() {
-	ASSERTM("start writing tests", true);
+void testGreaterForStringFunctor() {
+	indexableSet<std::string, greater> strSet{"HI", "lol", "xD", "alf", "cpp", "no more testats!!"};
+	ASSERT_EQUAL("xD", strSet.front());
+	ASSERT_EQUAL("alf", strSet.back());
 }
 
 bool runAllTests(int argc, char const *argv[]) {
 	cute::suite s { };
-	s.push_back(CUTE(thisIsATest));
 	s.push_back(CUTE(testIndexAccess));
 	s.push_back(CUTE(testNegativeIndexAccess));
 	s.push_back(CUTE(testNegativeAtAccess));
@@ -97,6 +108,7 @@ bool runAllTests(int argc, char const *argv[]) {
 	s.push_back(CUTE(testCopyCtor));
 	s.push_back(CUTE(testGreaterComperator));
 	s.push_back(CUTE(testLessComperator));
+	s.push_back(CUTE(testGreaterForStringFunctor));
 	cute::xml_file_opener xmlfile(argc, argv);
 	cute::xml_listener<cute::ide_listener<>> lis(xmlfile.out);
 	auto runner = cute::makeRunner(lis, argc, argv);
