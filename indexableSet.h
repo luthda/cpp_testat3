@@ -35,7 +35,7 @@ public:
 	}
 
 	const_reference front() const {
-		return this->at(0);
+		return at(0);
 	}
 };
 #endif /* SRC_INDEXABLESET_H_ */
