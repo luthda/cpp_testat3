@@ -45,6 +45,12 @@ void testOutOfBoundException() {
 	ASSERT_THROWS(strSet[3], std::out_of_range);
 }
 
+
+void testOutOfBoundExceptionNegative() {
+	indexableSet<std::string> strSet{":D", ";D", "xD"};
+	ASSERT_THROWS(strSet[-4], std::out_of_range);
+}
+
 void testFrontMethod() {
 	indexableSet<int> indexSet{1, 2, 3};
 	int indexVal = indexSet.front();
@@ -56,10 +62,6 @@ void testBackMethod() {
 	int indexVal = indexSet.back();
 	ASSERT_EQUAL(3, indexVal);
 }
-void testInitListCtor() {
-	indexableSet<std::string> strSet{":D", ";D", "xD", ":)", ";)"};
-	ASSERT_EQUAL(5, strSet.size());
-}
 
 void testEmptyMethodFromBase() {
 	indexableSet<int> indexSet{ };
@@ -70,6 +72,12 @@ void testAccessEmptySet() {
 	indexableSet<int> indexSet{ };
 	ASSERT_THROWS(indexSet[0], std::out_of_range);
 	ASSERT_THROWS(indexSet.front(), std::out_of_range);
+	ASSERT_THROWS(indexSet.back(), std::out_of_range);
+}
+
+void testInitListCtor() {
+	indexableSet<std::string> strSet{":D", ";D", "xD", ":)", ";)"};
+	ASSERT_EQUAL(5, strSet.size());
 }
 
 void testCopyCtor() {
@@ -112,6 +120,7 @@ bool runAllTests(int argc, char const *argv[]) {
 	s.push_back(CUTE(testGreaterComperator));
 	s.push_back(CUTE(testLessComperator));
 	s.push_back(CUTE(testGreaterForStringFunctor));
+	s.push_back(CUTE(testOutOfBoundExceptionNegative));
 	cute::xml_file_opener xmlfile(argc, argv);
 	cute::xml_listener<cute::ide_listener<>> lis(xmlfile.out);
 	auto runner = cute::makeRunner(lis, argc, argv);

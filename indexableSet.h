@@ -4,47 +4,37 @@
 #include <set>
 #include <iterator>
 #include <stdexcept>
+#include <functional>
 
 template <typename T, typename COMPARE=std::less<T>>
 class indexableSet : public std::set<T, COMPARE> {
 	using container = std::set<T, COMPARE>;
 	using container::container;
 	using const_reference = typename container::const_reference;
+	using difference_type = typename container::difference_type;
 
-	const_reference move(int index) const {
+	const_reference elementAt(difference_type index) const {
 		if (index < 0) index += this->size();
 		auto it{this->begin()};
 		return *std::next(it, index);
 	}
 
-	void emptyCheck() const {
-		if (this->empty()) {
-			throw std::out_of_range{"empty set!!"};
-		}
-	}
-
 public:
-	const_reference at(int index) const {
-		int signedSize = this->size();
-		if (index < signedSize && index >= -signedSize) {
-			return move(index);
-		}
-		else {
-			throw std::out_of_range{"index not in set range!!!"};
-		}
+	const_reference at(difference_type index) const {
+		difference_type signedSize = this->size();
+		if (index >= signedSize || index < -signedSize) throw std::out_of_range{"index not in set range!!!"};
+		return elementAt(index);
 	}
 
-	const_reference operator[](int index) const {
-		return this->at(index);
+	const_reference operator[](difference_type index) const {
+		return at(index);
 	}
 
 	const_reference back() const {
-		emptyCheck();
-		return this->at(this->size() - 1);
+		return at(-1);
 	}
 
 	const_reference front() const {
-		emptyCheck();
 		return this->at(0);
 	}
 };
