@@ -7,6 +7,9 @@
 #include <stdexcept>
 #include <string>
 #include <iterator>
+#include <cctype>
+#include <algorithm>
+#include <functional>
 
 struct caseless {
 	bool operator()(std::string const &lhs, std::string const &rhs) const {
@@ -20,6 +23,12 @@ void testIndexAccess() {
 	indexableSet<int, std::less<int>> indexSet{1, 2, 3};
 	int indexVal = indexSet[0];
 	ASSERT_EQUAL(1, indexVal);
+}
+
+void testRandomIndexAccess() {
+	indexableSet<int, std::less<int>> indexSet{1, 2, 3};
+	int indexVal = indexSet[1];
+	ASSERT_EQUAL(2, indexVal);
 }
 
 void testNegativeIndexAccess() {
@@ -121,6 +130,7 @@ bool runAllTests(int argc, char const *argv[]) {
 	s.push_back(CUTE(testLessComperator));
 	s.push_back(CUTE(testGreaterForStringFunctor));
 	s.push_back(CUTE(testOutOfBoundExceptionNegative));
+	s.push_back(CUTE(testRandomIndexAccess));
 	cute::xml_file_opener xmlfile(argc, argv);
 	cute::xml_listener<cute::ide_listener<>> lis(xmlfile.out);
 	auto runner = cute::makeRunner(lis, argc, argv);
